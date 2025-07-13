@@ -27,6 +27,12 @@ dist-ssr
 node_modules
 .env
 
+# Env files (safety)
+.env.local
+.env.development
+.env.production
+.env.*
+
 # Hardhat files
 /cache
 /artifacts

@@ -11,7 +11,13 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
 }
+
 
 a {
   font-weight: 500;
@@ -26,8 +32,8 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  
+ 
 }
 
 h1 {
@@ -66,3 +72,4 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+

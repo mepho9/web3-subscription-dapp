@@ -1,7 +1,8 @@
 const { ethers } = require("hardhat");
 const { parseEther, formatEther, formatUnits } = require("ethers");
 
-// 0x7e993Bb37E63d0b0B47A8558afD407200d4446E5
+// M9Token : 0xf0557F93506F287fe46657cCc40b66404e331ffF
+// SubscriptionManager : 0x7e993Bb37E63d0b0B47A8558afD407200d4446E5
 async function main() {
 	const [deployer] = await ethers.getSigners();
 	console.log("Deploying contracts with:", deployer.address);
