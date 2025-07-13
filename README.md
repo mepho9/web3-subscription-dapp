@@ -31,6 +31,7 @@ A modern decentralized subscription platform powered by **Ethereum** and **ERC-2
 
 ## 📁 Project Structure
 
+```
 web3-subscription-dapp/
 ├── frontend/                       # Frontend (React + Tailwind)
 │   ├── src/
@@ -38,17 +39,18 @@ web3-subscription-dapp/
 │   │   ├── components/             # UI components (WalletConnect, SubscriptionPanel)
 │   │   ├── constants/              # Constants like contract addresses
 │   │   ├── hooks/                  # Custom React hooks for web3 interactions
-│   │   └── ...
-│   └── ...
+│   │   └── ...                     # Other frontend files
+│   └── ...                         # Configs, assets, index.html, etc.
 │
-├── smart-contracts/                 Hardhat-based Solidity contracts
-│   ├── contracts/                  # Subscription logic contract
-│   ├── scripts/                    # Deployment scripts
-│   ├── test/                       # Unit tests for SubscriptionManager
-│   ├── .env.example          # Example .env config for Sepolia
-│   └── ...
+├── smart-contracts/               # Hardhat-based Solidity contracts
+│   ├── contracts/                 # Subscription logic contract
+│   ├── scripts/                   # Deployment scripts
+│   ├── test/                      # Unit tests for SubscriptionManager
+│   ├── .env.example               # Example .env config for Sepolia
+│   └── ...                        # Artifacts, cache, config, etc.
 │
-└── README.md                 # You're reading it 📘
+└── README.md                      # You're reading it 📘
+```
 
 ---
 
