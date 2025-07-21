@@ -5,8 +5,11 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+import "./interfaces/AutomationCompatibleInterface.sol";
 
-contract SubscriptionManager is ReentrancyGuard, Ownable {
+
+
+contract SubscriptionManager is AutomationCompatibleInterface, ReentrancyGuard, Ownable {
 
     // Events
     event Subscribed(address indexed user, uint256 expiresAt);
@@ -14,9 +17,14 @@ contract SubscriptionManager is ReentrancyGuard, Ownable {
 
     // Variables
     IERC20 public acceptedToken;
+
+    address[] public subscribers; 
     uint256 public immutable subscriptionFee; 
     uint256 public immutable subscriptionPeriod;
+
     mapping(address => uint256) public subscriptionExpirations; 
+    mapping(address => bool) public autoRenewEnabled;
+
 
     // Constructor
     constructor(address tokenAddress, uint256 _subscriptionFee, uint256 _subscriptionPeriod) Ownable(msg.sender){
@@ -36,6 +44,10 @@ contract SubscriptionManager is ReentrancyGuard, Ownable {
         // Subscription expiration date updated
         uint256 currentExpiration = subscriptionExpirations[msg.sender];
         uint256 currentTimestamp = block.timestamp;
+
+        if (subscriptionExpirations[msg.sender] == 0) {
+            subscribers.push(msg.sender);
+        }
 
         if(currentExpiration > currentTimestamp){
             // Extend existing subscription
@@ -84,4 +96,30 @@ contract SubscriptionManager is ReentrancyGuard, Ownable {
         emit TokensWithdrawn(to, balance);
 
     }
-}
+
+    function setAutoRenew(bool enabled) external {
+        autoRenewEnabled[msg.sender] = enabled;
+    }
+
+    function checkUpkeep(bytes calldata) external view override returns (bool upkeepNeeded, bytes memory performData) {
+        for (uint i = 0; i < subscribers.length; i++) {
+            address user = subscribers[i];
+            if (autoRenewEnabled[user] && block.timestamp > subscriptionExpiresAt(user)) {
+                upkeepNeeded = true;
+                performData = abi.encode(user);
+                return (true, performData);
+            }
+        }
+        return (false, "");
+    }
+
+    function performUpkeep(bytes calldata performData) external override {
+        address user = abi.decode(performData, (address));
+        if (autoRenewEnabled[user] && block.timestamp > subscriptionExpiresAt(user)) {
+            // user must have approved enough M9 tokens before
+            acceptedToken.transferFrom(user, address(this), subscriptionFee);
+            subscriptionExpirations[user] = block.timestamp + subscriptionPeriod;
+            emit Subscribed(user, subscriptionExpirations[user]);
+        }
+    }
+}   

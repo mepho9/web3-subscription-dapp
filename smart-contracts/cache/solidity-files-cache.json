@@ -267,8 +267,8 @@
       ]
     },
     "C:\\Users\\Rufat\\Desktop\\Metana\\web3-subscription-dapp\\web3-subscription-dapp\\smart-contracts\\contracts\\SubscriptionManager.sol": {
-      "lastModificationDate": 1752320508218,
-      "contentHash": "490c61cecc9a802b29ee657b7224830b",
+      "lastModificationDate": 1753082023216,
+      "contentHash": "16efe0599d5646c102033cf8686873c1",
       "sourceName": "contracts/SubscriptionManager.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -297,7 +297,8 @@
       "imports": [
         "@openzeppelin/contracts/token/ERC20/IERC20.sol",
         "@openzeppelin/contracts/utils/ReentrancyGuard.sol",
-        "@openzeppelin/contracts/access/Ownable.sol"
+        "@openzeppelin/contracts/access/Ownable.sol",
+        "./interfaces/AutomationCompatibleInterface.sol"
       ],
       "versionPragmas": [
         "^0.8.20"
@@ -340,6 +341,42 @@
       ],
       "artifacts": [
         "ReentrancyGuard"
+      ]
+    },
+    "C:\\Users\\Rufat\\Desktop\\Metana\\web3-subscription-dapp\\web3-subscription-dapp\\smart-contracts\\contracts\\interfaces\\AutomationCompatibleInterface.sol": {
+      "lastModificationDate": 1753081894090,
+      "contentHash": "9dc34ed9d3196d767171bf8125074642",
+      "sourceName": "contracts/interfaces/AutomationCompatibleInterface.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "AutomationCompatibleInterface"
       ]
     }
   }
