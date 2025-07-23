@@ -10,7 +10,9 @@ export default function SubscriptionPanel() {
 	const [remainingTime, setRemainingTime] = useState(null);
 	const [expirationDate, setExpirationDate] = useState(null);
 	const [price, setPrice] = useState(null);
-
+	const [autoRenew, setAutoRenew] = useState(false);
+	const [autoRenewMessage, setAutoRenewMessage] = useState('');
+	
 	useEffect(() => {
 		const init = async () => {
 			if (window.ethereum) {
@@ -22,24 +24,29 @@ export default function SubscriptionPanel() {
 		init();
 	}, []);
 
-	const { subscribe, checkSubscription, getRemaining, getExpiration, getPrice } = useSubscriptionManager(signer);
+	const { subscribe, checkSubscription, getRemaining, getExpiration, getPrice, setAutoRenew: updateAutoRenew, getAutoRenew } = useSubscriptionManager(signer);
 	const { approve, contract: m9Contract } = useM9Token(signer);
 
 	useEffect(() => {
 		if (!signer) return;
 		const fetchData = async () => {
 			const userAddress = await signer.getAddress();
-			const [subscribed, remaining, expiresAt, fee] = await Promise.all([
+			const [subscribed, remaining, expiresAt, fee, autoRenewStatus] = await Promise.all([
 				checkSubscription(userAddress),
 				getRemaining(userAddress),
 				getExpiration(userAddress),
-				getPrice()
+				getPrice(),
+				getAutoRenew(userAddress)
+
 			]);
 
 			setIsSubscribed(subscribed);
 			setRemainingTime(remaining);
 			setExpirationDate(new Date(expiresAt * 1000));
-			setPrice(fee ? ethers.formatUnits(fee, 18) : null);
+			setPrice(fee != null ? ethers.formatUnits(fee, 18) : null);
+			setAutoRenew(autoRenewStatus);
+			
+
 		};
 		fetchData();
 	}, [signer]);
@@ -92,6 +99,24 @@ export default function SubscriptionPanel() {
 		});
 	};
 
+	const handleAutoRenewChange = async (e) => {
+	const newValue = e.target.checked;
+	setAutoRenew(newValue);
+
+	try {
+		await updateAutoRenew(newValue);
+		setAutoRenewMessage("Auto-renew updated ✅");
+
+		setTimeout(() => {
+			setAutoRenewMessage('');
+		}, 3000);
+	} catch (err) {
+		console.error("Failed to update auto-renew:", err);
+		alert("Failed to update auto-renew setting ❌");
+	}
+};
+
+
 
 return (
 	<div className="p-6 bg-white rounded-2xl shadow-lg w-full text-black space-y-6">
@@ -125,6 +150,25 @@ return (
 				</div>
 			</div>
 		)}
+
+		<div className="flex items-center space-x-2 pt-2">
+		<input
+	type="checkbox"
+	id="autoRenew"
+	checked={autoRenew}
+	onChange={handleAutoRenewChange}
+	className="w-4 h-4"
+/>
+<label htmlFor="autoRenew" className="text-sm text-gray-700">
+	Resubscribe automatically each month?
+</label>
+
+{autoRenewMessage && (
+	<p className="text-green-600 text-sm pt-1">{autoRenewMessage}</p>
+)}
+
+		</div>
+
 	</div>
 );
 

@@ -58,6 +58,16 @@ export default function useSubscriptionManager(signer) {
 		return fee;
 	};
 
+	const setAutoRenew = async (enabled) => {
+		if (!contract) return;
+		const tx = await contract.setAutoRenew(enabled);
+		await tx.wait();
+	};
+
+	const getAutoRenew = async (userAddress) => {
+		if (!contract) return false;
+		return await contract.autoRenewEnabled(userAddress);
+	};
 
 	return {
 		checkSubscription,
@@ -66,6 +76,9 @@ export default function useSubscriptionManager(signer) {
 		subscribe,
 		contract,
 		getExpiration,
-		getPrice
+		getPrice,
+		setAutoRenew,
+		getAutoRenew
 	};
+	
 }

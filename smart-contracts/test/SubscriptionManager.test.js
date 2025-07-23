@@ -119,4 +119,48 @@ describe("SubscriptionManager", function () {
       await expect(subscriptionManager.connect(user).withdraw(user.address, fee)).to.be.reverted;
     });
   });
+
+    describe("Chainlink Automation (auto-renewal)", function () {
+    beforeEach(async () => {
+      // Subscribe user
+      await subscriptionManager.connect(user).subscribe();
+
+      // Enable auto-renew
+      await subscriptionManager.connect(user).setAutoRenew(true);
+
+      // Advance time beyond subscription expiration
+      await ethers.provider.send("evm_increaseTime", [period + 10]);
+      await ethers.provider.send("evm_mine");
+
+      // Re-approve in case tokens need approval again
+      await token.connect(user).approve(subscriptionManager.target, ethers.parseEther("100"));
+    });
+
+    it("should return true in checkUpkeep when subscription expired and autoRenew is enabled", async () => {
+      const { upkeepNeeded, performData } = await subscriptionManager.checkUpkeep("0x");
+      expect(upkeepNeeded).to.be.true;
+
+      const decoded = ethers.AbiCoder.defaultAbiCoder().decode(["address"], performData);
+      expect(decoded[0]).to.equal(user.address);
+    });
+
+    it("should perform auto-renewal via performUpkeep", async () => {
+      const { performData } = await subscriptionManager.checkUpkeep("0x");
+
+      const oldExpiry = await subscriptionManager.subscriptionExpiresAt(user.address);
+
+      await subscriptionManager.performUpkeep(performData);
+
+      const newExpiry = await subscriptionManager.subscriptionExpiresAt(user.address);
+
+      expect(newExpiry).to.be.greaterThan(oldExpiry);
+    });
+
+    it("should not renew if autoRenew is off", async () => {
+      await subscriptionManager.connect(user).setAutoRenew(false);
+      const { upkeepNeeded } = await subscriptionManager.checkUpkeep("0x");
+      expect(upkeepNeeded).to.be.false;
+    });
+  });
+
 });

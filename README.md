@@ -116,6 +116,18 @@ All required packages (e.g. TailwindCSS, Ethers.js, OpenZeppelin contracts) are 
 
 ---
 
+## ⛓️ Chainlink Keepers Automation
+
+Subscription renewals are automated with [Chainlink Automation (Keepers)](https://automation.chain.link/sepolia/71550627632496125458784253661777858475152577054284743096851558071326758588525).
+
+- 🔄 Auto-renewal logic implemented via smart contract’s `checkUpkeep` and `performUpkeep`
+- ✅ Users can enable or disable auto-renew through the dApp (`setAutoRenew` function)
+- 🔗 Keepers are funded with LINK tokens to ensure reliable execution on Sepolia testnet
+- 🌐 Transparent monitoring of upkeep executions available via Chainlink Automation dashboard
+- 🎯 Automates subscription renewals to improve UX by removing manual renewal steps
+
+---
+
 ## 🧪 Tenderly Monitoring
 
 Subscription events are monitored with [Tenderly](https://tenderly.co/)
@@ -147,7 +159,7 @@ Subscription events are monitored with [Tenderly](https://tenderly.co/)
 ## 🔗 Deployed Contract
 
 - Network: Sepolia Testnet
-- Contract Address: [`0x7e993Bb37E63d0b0B47A8558afD407200d4446E5`](https://sepolia.etherscan.io/address/0x7e993Bb37E63d0b0B47A8558afD407200d4446E5)
+- Contract Address: [`0xfD213a9E7D189Eb8680be88a89babFfab58C642D`](https://sepolia.etherscan.io/address/0xfD213a9E7D189Eb8680be88a89babFfab58C642D)
 
 ---
 
